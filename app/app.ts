@@ -1,7 +1,7 @@
 // app/app.ts
 import express from "express";
 import bodyParser from "body-parser";
-import {AppHomeRoute} from "./routes/AppHomeRoute";
+import {Route} from "./GraphQl/Route";
 
 
 let framework = require('express')(),
@@ -11,9 +11,8 @@ let framework = require('express')(),
 // for auth
 const   mongoose = require("mongoose"),
         methodOverride = require("method-override"),
-        expressSanitizer= require('express-sanitizer'),
-        graphqlHttp     = require('express-graphql'),
-        {buildSchema}   = require('graphql');
+        expressSanitizer= require('express-sanitizer');
+
 
 
 
@@ -21,7 +20,7 @@ const   mongoose = require("mongoose"),
 
 
         public app: express.Application;
-        public route: AppHomeRoute = new AppHomeRoute();
+        public route: Route = new Route();
         constructor() {
             mongoose.connect(" mongodb+srv://prashantbasnet:prashantbasnet94@portfolio-aejnr.mongodb.net/CovidMap?retryWrites=true");
             this.app = express();
@@ -41,31 +40,7 @@ const   mongoose = require("mongoose"),
 
 
             //graphql
-            this.app.use('/graphql',graphqlHttp({
-                schema:buildSchema(`
-                type RootQuery{
-                    events:[String!]
-                }
-                
-                type RootMutation{
-                   createEvent(name:String):String               
-                 }
-          
-                schema  {
-                           query:RootQuery
-                           mutation: RootMutation
-                }
-                `),
-                rootValue:{
-                    events:()=>{
-                        return ['Hey','It',"Worked"]
-                    },
-                    createEvent:(args:any)=>{
-                        return args.name;
-                    }
-                },
-                graphiql:true
-            }));
+
             this.route.routes(this.app);
 
 

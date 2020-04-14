@@ -1,6 +1,6 @@
 import {Home} from "../controllers/Home";
-import {TestImpl} from '../RestApi/Test/TestImpl';
-import {Test} from '../RestApi/Test/Test';
+import {TestImpl} from '../API/Test/TestImpl';
+import {Test} from '../API/Test/Test';
 
 
 

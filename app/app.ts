@@ -1,10 +1,7 @@
 // app/app.ts
-import express, {Response} from "express";
+import express from "express";
 import bodyParser from "body-parser";
 import {AppHomeRoute} from "./routes/AppHomeRoute";
-import {TestImpl} from "./RestApi/Test/TestImpl";
-
-
 
 
 let framework = require('express')(),
@@ -12,11 +9,11 @@ let framework = require('express')(),
 
 
 // for auth
-const
-
-        mongoose = require("mongoose"),
+const   mongoose = require("mongoose"),
         methodOverride = require("method-override"),
-        expressSanitizer= require('express-sanitizer');
+        expressSanitizer= require('express-sanitizer'),
+        graphqlHttp     = require('express-graphql'),
+        {buildSchema}   = require('graphql');
 
 
 
@@ -26,7 +23,7 @@ const
         public app: express.Application;
         public route: AppHomeRoute = new AppHomeRoute();
         constructor() {
-            mongoose.connect(" mongodb+srv://basnet:BKfJOVDNrqScaAuv@cluster0-lhfyg.mongodb.net/test?retryWrites=true&w=majority");
+            mongoose.connect(" mongodb+srv://prashantbasnet:prashantbasnet94@portfolio-aejnr.mongodb.net/CovidMap?retryWrites=true");
             this.app = express();
             this.app.use(methodOverride("_method"));
 
@@ -41,6 +38,34 @@ const
             this.app.use(expressSanitizer());
             this.config();
             // this.app.use(this.auth.isLoggedIn
+
+
+            //graphql
+            this.app.use('/graphql',graphqlHttp({
+                schema:buildSchema(`
+                type RootQuery{
+                    events:[String!]
+                }
+                
+                type RootMutation{
+                   createEvent(name:String):String               
+                 }
+          
+                schema  {
+                           query:RootQuery
+                           mutation: RootMutation
+                }
+                `),
+                rootValue:{
+                    events:()=>{
+                        return ['Hey','It',"Worked"]
+                    },
+                    createEvent:(args:any)=>{
+                        return args.name;
+                    }
+                },
+                graphiql:true
+            }));
             this.route.routes(this.app);
 
 

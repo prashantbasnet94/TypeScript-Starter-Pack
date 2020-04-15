@@ -6,18 +6,44 @@ import express from "express";
 const graphqlHttp     = require('express-graphql'),
     {buildSchema}   = require('graphql');
 let app: express.Application;
+let events: string[] = [];
 export  class Route {
 
-
     public routes(app:any):void{
+
+//title:String!,description:String!,price:Float!,date:String!
+//
+//         mutation {
+//             createEvent(eventInput: {title: "Orashant", description: "the fuk", price: 12, date: "the 2020"}) {
+//                 title
+//                 description
+//             }
+//         }
+
        app.use('/graphql',graphqlHttp({
             schema:buildSchema(`
-                type RootQuery{
-                    events:[String!]
+             
+                type Event {
+                    _id:String!
+                    title:String!
+                    description:String!
+                    price: Float!
+                    date:String!
+                    }
+                input EventInput{
+                    title:String!
+                    description:String
+                    price:Float!
+                    date:String!
+                
                 }
+                type RootQuery{
+                    events:[Event!]!
+                }
+                
 
                 type RootMutation{
-                   createEvent(name:String):String
+                   createEvent(eventInput:EventInput):Event!
                  }
 
                 schema  {
@@ -27,10 +53,22 @@ export  class Route {
                 `),
             rootValue:{
                 events:()=>{
-                    return ['Hey','It',"Worked"]
+                    return events
                 },
-                createEvent:(args:any)=>{
-                    return args.name;
+                createEvent:(param:any)=>{
+                    let args=param.eventInput;
+                    let event={
+                        _id:Math.random().toString(),
+                        title:args.title,
+                        description:args.description,
+                        price:+args.price,
+                        date:args.date
+                    };
+                    console.log(event);
+                    console.log('---->'+events.length);
+                    events.push(event);
+
+                    return event;
                 }
             },
             graphiql:true

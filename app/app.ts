@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import {Route} from "./GraphQl/Route";
 
 
-
+let framework = require('express')(),
 
 
 
@@ -22,11 +22,7 @@ const   mongoose = require("mongoose"),
         public app: express.Application;
         public route: Route = new Route();
         constructor() {
-
-
-            mongoose.connect('mongodb+srv://prashantbasnet:prashantbasnet94@portfolio-aejnr.mongodb.net/EcomDevelopment?retryWrites=true').then().catch((err:any)=>{
-                console.log(err);
-            });
+            mongoose.connect(" mongodb+srv://prashantbasnet:prashantbasnet94@portfolio-aejnr.mongodb.net/CovidMap?retryWrites=true");
             this.app = express();
             this.app.use(methodOverride("_method"));
 

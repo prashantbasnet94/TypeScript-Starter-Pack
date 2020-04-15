@@ -1,4 +1,4 @@
-
+import {Home} from "../controllers/Home";
 import {TestImpl} from '../API/Test/TestImpl';
 import {Test} from '../API/Test/Test';
 import express from "express";
@@ -6,7 +6,7 @@ import express from "express";
 const graphqlHttp     = require('express-graphql'),
     {buildSchema}   = require('graphql');
 let app: express.Application;
-let events: any[any] = [];
+let events: string[] = [];
 export  class Route {
 
     public routes(app:any):void{
